@@ -7,16 +7,9 @@ type LayoutProps = {
 
 export function Layout({ children }: LayoutProps) {
   return (
-    <div className="z-20">
+    <div className="z-20 bg-background">
       <Navbar />
-      <div
-        style={{
-          width: '100vw',
-          height: '100vh',
-        }}
-      >
-        {children}
-      </div>
+      <div className="w-screen h-screen">{children}</div>
     </div>
   );
 }

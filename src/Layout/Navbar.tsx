@@ -31,9 +31,17 @@ const NavbarItem: React.FC<NavbarItemProps> = ({ text, href }) => {
 
 export const Navbar = () => {
   return (
-    <nav className="bg-background p-4">
-      <div className="container mx-auto flex justify-between items-center">
-        <div className="flex 2xl:space-x-8 xl:space-x-2lg:space-x-0">
+    <nav className="p-8">
+      <div className="container mx-auto flex justify-center items-center">
+        <div className="flex items-center 2xl:space-x-8 xl:space-x-2lg:space-x-0">
+          <div>
+            <a href="#">
+              <img src="/logo-full.svg" alt="Logo" className="h-8" />
+            </a>
+          </div>
+          <NavbarItem text="Explorar" href="#" />
+          <NavbarItem text="Explorar" href="#" />
+          <NavbarItem text="Explorar" href="#" />
           <NavbarItem text="Explorar" href="#" />
         </div>
       </div>

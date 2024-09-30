@@ -1,0 +1,93 @@
+[
+  {
+    "id": "1",
+    "urls": {
+      "regular": "https://picsum.photos/id/237/300/200"
+    },
+    "alt_description": "Imagem aleatória 1"
+  },
+  {
+    "id": "2",
+    "urls": {
+      "regular": "https://picsum.photos/id/238/300/200"
+    },
+    "alt_description": "Imagem aleatória 2"
+  },
+  {
+    "id": "3",
+    "urls": {
+      "regular": "https://picsum.photos/id/239/300/200"
+    },
+    "alt_description": "Imagem aleatória 3"
+  },
+  {
+    "id": "4",
+    "urls": {
+      "regular": "https://picsum.photos/id/240/300/200"
+    },
+    "alt_description": "Imagem aleatória 4"
+  },
+  {
+    "id": "5",
+    "urls": {
+      "regular": "https://picsum.photos/id/241/300/200"
+    },
+    "alt_description": "Imagem aleatória 5"
+  },
+  {
+    "id": "6",
+    "urls": {
+      "regular": "https://picsum.photos/id/242/300/200"
+    },
+    "alt_description": "Imagem aleatória 6"
+  },
+  {
+    "id": "7",
+    "urls": {
+      "regular": "https://picsum.photos/id/243/300/200"
+    },
+    "alt_description": "Imagem aleatória 7"
+  },
+  {
+    "id": "8",
+    "urls": {
+      "regular": "https://picsum.photos/id/244/300/200"
+    },
+    "alt_description": "Imagem aleatória 8"
+  },
+  {
+    "id": "9",
+    "urls": {
+      "regular": "https://picsum.photos/id/225/200/100"
+    },
+    "alt_description": "Imagem aleatória 9"
+  },
+  {
+    "id": "10",
+    "urls": {
+      "regular": "https://picsum.photos/id/100/100"
+    },
+    "alt_description": "Imagem aleatória 10"
+  },
+  {
+    "id": "11",
+    "urls": {
+      "regular": "https://picsum.photos/id/247/300/200"
+    },
+    "alt_description": "Imagem aleatória 11"
+  },
+  {
+    "id": "12",
+    "urls": {
+      "regular": "https://picsum.photos/id/248/300/200"
+    },
+    "alt_description": "Imagem aleatória 12"
+  },
+  {
+    "id": "13",
+    "urls": {
+      "regular": "https://picsum.photos/id/249/300/200"
+    },
+    "alt_description": "Imagem aleatória 13"
+  }
+]

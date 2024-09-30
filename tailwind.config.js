@@ -4,12 +4,10 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: '#0A0A0A',
+        primary: '#FED215',
         secondary: '#F2F2F2',
-        accent: '#FF4656',
-        'accent-dark': '#FFA000',
-        'accent-light': '#FFECB3',
-        background: '#1F2326',
+        contrast: '#D8D8D8',
+        background: '#171717',
       },
       fontFamily: {
         body: ['Inter', 'sans-serif'],
