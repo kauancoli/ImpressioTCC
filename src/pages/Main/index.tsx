@@ -1,5 +1,5 @@
-import React from 'react';
-import json from '../../../mock.json';
+import React from "react";
+import json from "../../../mock.json";
 interface Image {
   id: string;
   urls: {
@@ -14,7 +14,7 @@ export const Main: React.FC = () => {
   return (
     <div className="container mx-auto p-8 h-screen">
       <div className="overflow-y-auto h-5/6">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
           {photos.map((photo) => (
             <div key={photo.id} className="relative">
               <img
