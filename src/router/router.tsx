@@ -1,13 +1,59 @@
-import { Main } from '@/pages/Main';
-import React from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { Layout } from "@/components/Layout/Layout";
+import { Loading } from "@/components/Loading";
+import { PinInfo } from "@/components/PinDetail/PinInfo";
+import { AuthProvider, useAuth } from "@/context/AuthContext";
+import { Login } from "@/pages/Login";
+import { Main } from "@/pages/Main";
+import { Suspense } from "react";
+import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
 
-export const Router: React.FC = () => {
+export default function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Main />} />
-      </Routes>
-    </BrowserRouter>
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
   );
-};
+}
+
+const router = createBrowserRouter([
+  {
+    id: "main",
+    element: <GlobalLayout />,
+    children: [
+      {
+        id: "public",
+        element: <PublicLayout />,
+        children: [
+          { path: "/", element: <Main /> },
+          { path: "/pin/:id", element: <PinInfo /> },
+          { path: "/login", element: <Login /> },
+        ],
+      },
+    ],
+  },
+]);
+
+function GlobalLayout() {
+  const { loading } = useAuth();
+  return (
+    <Suspense fallback={<Loading />}>
+      {loading ? <Loading /> : <Outlet />}
+    </Suspense>
+  );
+}
+
+function PublicLayout() {
+  const { loading } = useAuth();
+
+  return (
+    <>
+      {loading ? (
+        <Loading />
+      ) : (
+        <Layout>
+          <Outlet />
+        </Layout>
+      )}
+    </>
+  );
+}
