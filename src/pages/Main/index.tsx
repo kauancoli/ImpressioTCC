@@ -7,7 +7,7 @@ export const Main: React.FC = () => {
   const photos: PinDetailDTO[] = json;
 
   return (
-    <div className="p-5">
+    <div className="p-3">
       <PinList listOfPins={photos} />
     </div>
   );

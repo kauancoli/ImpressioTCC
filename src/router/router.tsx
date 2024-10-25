@@ -34,10 +34,9 @@ const router = createBrowserRouter([
 ]);
 
 function GlobalLayout() {
-  const { loading } = useAuth();
   return (
     <Suspense fallback={<Loading />}>
-      {loading ? <Loading /> : <Outlet />}
+      <Outlet />
     </Suspense>
   );
 }
@@ -46,14 +45,8 @@ function PublicLayout() {
   const { loading } = useAuth();
 
   return (
-    <>
-      {loading ? (
-        <Loading />
-      ) : (
-        <Layout>
-          <Outlet />
-        </Layout>
-      )}
-    </>
+    <div>
+      <Layout>{loading ? <Loading /> : <Outlet />}</Layout>
+    </div>
   );
 }
