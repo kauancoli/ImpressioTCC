@@ -43,7 +43,7 @@ function GlobalLayout() {
 
 function PublicLayout() {
   const { loading } = useAuth();
-
+  console.log(loading);
   return (
     <div>
       <Layout>{loading ? <Loading /> : <Outlet />}</Layout>
