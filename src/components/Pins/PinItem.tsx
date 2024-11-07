@@ -35,7 +35,7 @@ export const PinItem = ({ pin, user }: PinItemProps) => {
 
       <h2
         className="font-bold 
-        text-base mb-1 mt-2 text-white"
+        text-sm mb-1 mt-2 text-white lg:text-base"
       >
         {pin.title}
       </h2>

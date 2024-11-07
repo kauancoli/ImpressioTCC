@@ -2,7 +2,9 @@ import { Layout } from "@/components/Layout/Layout";
 import { Loading } from "@/components/Loading";
 import { PinInfo } from "@/components/PinDetail/PinInfo";
 import { AuthProvider, useAuth } from "@/context/AuthContext";
-import { Login } from "@/pages/Login";
+import { Add } from "@/pages/Add";
+import { Login } from "@/pages/Login/Login";
+import { Register } from "@/pages/Login/Register";
 import { Main } from "@/pages/Main";
 import { Suspense } from "react";
 import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
@@ -26,7 +28,9 @@ const router = createBrowserRouter([
         children: [
           { path: "/", element: <Main /> },
           { path: "/pin/:id", element: <PinInfo /> },
+          { path: "/add", element: <Add /> },
           { path: "/login", element: <Login /> },
+          { path: "/register", element: <Register /> },
         ],
       },
     ],

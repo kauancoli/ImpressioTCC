@@ -1,4 +1,3 @@
-import { useAuth } from "@/context/AuthContext";
 import { PinDetailDTO } from "@/DTOS/PinDTO";
 import { motion } from "framer-motion";
 import { ArrowLeft } from "phosphor-react";
@@ -10,11 +9,10 @@ import { UpDownVote } from "../UpDownVote";
 import { UserTag } from "../UserTag";
 import { PinImage } from "./PinImage";
 
-type PinInfoProps = {};
+type PinInfoProps = object;
 
 export const PinInfo: React.FC<PinInfoProps> = () => {
   const { id } = useParams();
-
   const navigate = useNavigate();
   const topRef = useRef<HTMLDivElement>(null);
 
@@ -47,7 +45,7 @@ export const PinInfo: React.FC<PinInfoProps> = () => {
 
   return (
     <motion.div
-      className="pt-6"
+      className="pt-6 px-4 sm:px-8"
       ref={topRef}
       initial="hidden"
       animate="visible"
@@ -65,16 +63,18 @@ export const PinInfo: React.FC<PinInfoProps> = () => {
 
       {filteredPhotos.map((p) => (
         <motion.div
-          className="flex justify-center items-center gap-8 flex-col lg:flex-row"
+          className="flex flex-col lg:flex-row justify-center items-center gap-8"
           key={`${p.id} - ${p.title}`}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, ease: "easeOut" }}
         >
           <PinImage image={p.image.image} title={p.image.title} />
-          <div className="flex flex-col gap-8 w-3/12">
-            <h2 className="text-4xl font-bold text-white">{p.title}</h2>
-            <div className="overflow-y-auto max-h-56 pr-8">
+          <div className="flex flex-col gap-4 w-full lg:w-4/12 items-center lg:items-start">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white text-center lg:text-left">
+              {p.title}
+            </h2>
+            <div className="overflow-y-auto max-h-56 pr-2 lg:pr-8 text-sm sm:text-base">
               <h2 className="text-white break-words">{p.desc}</h2>
             </div>
             <UserTag user={p.user} />
@@ -83,8 +83,8 @@ export const PinInfo: React.FC<PinInfoProps> = () => {
         </motion.div>
       ))}
 
-      <div className="mt-16 px-16">
-        <h2 className="text-lg text-white text-center mb-8 select-none">
+      <div className="mt-10 lg:mt-16 px-2 sm:px-8 lg:px-16">
+        <h2 className="text-base sm:text-lg text-white text-center mb-4 lg:mb-8 select-none">
           Mais para Explorar
         </h2>
         <PinList listOfPins={randomPhotos} />

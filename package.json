@@ -7,7 +7,7 @@
     "name": "Dominike Righi / Kauan Coli / Rodrigo Oliveira"
   },
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --port 4002",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview"

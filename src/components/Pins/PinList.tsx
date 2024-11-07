@@ -13,7 +13,7 @@ export const PinList = ({ listOfPins }: PinListProps) => {
     1100: 4,
     700: 3,
     500: 2,
-    400: 1,
+    400: 2,
   };
 
   return (

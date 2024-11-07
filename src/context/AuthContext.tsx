@@ -5,6 +5,12 @@ import { createContext, useContext, useEffect, useState } from "react";
 interface AuthContextData {
   token: string | null;
   login: (username: string, password: string) => void;
+  register: (
+    username: string,
+    email: string,
+    birthdate: string,
+    password: string
+  ) => void;
   signOut: () => void;
   user: UserDTO | null;
   loading: boolean;
@@ -45,13 +51,32 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   }
 
+  async function register(
+    username: string,
+    email: string,
+    birthdate: string,
+    password: string
+  ) {
+    setLoading(true);
+    try {
+      const response = await signUpApi(username, email, birthdate, password);
+      console.log(response);
+      setLoading(false);
+    } catch (error) {
+      console.error(error);
+      setLoading(false);
+    }
+  }
+
   function signOut() {
     setToken(null);
     setUser(null);
   }
 
   return (
-    <AuthContext.Provider value={{ token, login, signOut, user, loading }}>
+    <AuthContext.Provider
+      value={{ token, login, register, signOut, user, loading }}
+    >
       {children}
     </AuthContext.Provider>
   );
@@ -72,6 +97,27 @@ async function signInApi(
   try {
     const response = await axios.post("", {
       username,
+      password,
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+
+async function signUpApi(
+  username: string,
+  email: string,
+  birthdate: string,
+  password: string
+): Promise<string | null> {
+  try {
+    const response = await axios.post("", {
+      username,
+      email,
+      birthdate,
       password,
     });
 

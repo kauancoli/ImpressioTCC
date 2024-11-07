@@ -1,6 +1,6 @@
 import { motion, useAnimation } from "framer-motion";
-import { MagnifyingGlass } from "phosphor-react";
-import { useEffect } from "react";
+import { List, MagnifyingGlass } from "phosphor-react";
+import { useEffect, useState } from "react";
 
 type NavbarItemProps = {
   text: string;
@@ -21,12 +21,7 @@ const NavbarItem: React.FC<NavbarItemProps> = ({ text, href }) => {
     >
       <a
         href={href}
-        className="text-white 
-        2xl:text-sm 
-        lg:text-xs
-        text-md
-        
-        font-bold hover:text-gray-500 uppercase p-2"
+        className="text-white text-sm font-bold hover:text-gray-500 uppercase p-2"
       >
         {text}
       </a>
@@ -35,23 +30,22 @@ const NavbarItem: React.FC<NavbarItemProps> = ({ text, href }) => {
 };
 
 export const Navbar = () => {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   return (
-    <nav className="p-3">
-      <div className="container mx-auto flex items-center">
-        <div className="flex items-center space-x-0 lg:space-x-4">
-          <div>
-            <a href="/">
-              <img src="/logo-full.svg" alt="Logo" className="h-8" />
-            </a>
+    <nav className="p-3 bg-gray-900">
+      <div className="container mx-auto flex items-center justify-between">
+        <div className="flex items-center space-x-4">
+          <a href="/">
+            <img src="/logo-full.svg" alt="Logo" className="h-8" />
+          </a>
+          <div className="hidden lg:flex space-x-4">
+            <NavbarItem text="Explorar" href="/" />
+            <NavbarItem text="Adicionar" href="/add" />
           </div>
-          <NavbarItem text="Explorar" href="/" />
-          <NavbarItem text="Adicionar" href="/" />
         </div>
 
-        <div
-          className="flex-grow mx-4 relative 
-        lg:block hidden"
-        >
+        <div className="hidden lg:flex flex-grow mx-4 relative">
           <input
             type="text"
             placeholder="Pesquisar..."
@@ -62,17 +56,48 @@ export const Navbar = () => {
           </div>
         </div>
 
-        <div className="flex items-center space-x-4 ml-auto">
+        <div className="hidden lg:flex items-center space-x-4 ml-auto">
           <a href="/login">
             <button className="bg-primary text-background px-6 py-2 rounded-2xl hover:opacity-80 transition font-medium">
               Entrar
             </button>
           </a>
-          <button className="bg-background border border-primary text-white px-4 py-2 rounded-2xl hover:opacity-70 transition">
-            Criar Conta
+
+          <a href="/register">
+            <button className="bg-background border border-primary text-white px-4 py-2 rounded-2xl hover:opacity-70 transition">
+              Criar Conta
+            </button>
+          </a>
+        </div>
+
+        <div className="lg:hidden flex items-center">
+          <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+            <List size={24} className="text-white" />
           </button>
         </div>
       </div>
+
+      {isMobileMenuOpen && (
+        <div className="lg:hidden flex flex-col mt-4 space-y-4 bg-gray-800 p-4 rounded-lg">
+          <NavbarItem text="Explorar" href="/" />
+          <NavbarItem text="Adicionar" href="/" />
+          <input
+            type="text"
+            placeholder="Pesquisar..."
+            className="w-full h-10 px-4 text-black rounded-lg focus:outline-none"
+          />
+          <div className="flex flex-col space-y-2">
+            <a href="/login">
+              <button className="bg-primary text-background w-full py-2 rounded-lg hover:opacity-80 transition font-medium">
+                Entrar
+              </button>
+            </a>
+            <button className="bg-background border border-primary text-white w-full py-2 rounded-lg hover:opacity-70 transition">
+              Criar Conta
+            </button>
+          </div>
+        </div>
+      )}
     </nav>
   );
 };

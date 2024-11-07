@@ -3,11 +3,6 @@ import { Eye, EyeSlash } from "phosphor-react";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 
-interface LoginFormData {
-  username: string;
-  password: string;
-}
-
 export function LoginForm() {
   const { login } = useAuth();
   const [email, setEmail] = useState<string>("");
@@ -91,6 +86,13 @@ export function LoginForm() {
           </button>
         </div>
       </form>
+
+      <div className="text-center text-white pt-4 text-xs">
+        <span>Não tem uma conta? </span>
+        <a href="/register" className="text-primary">
+          Criar conta
+        </a>
+      </div>
     </div>
   );
 }

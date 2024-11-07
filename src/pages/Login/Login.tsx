@@ -1,10 +1,9 @@
-import { LoginForm } from "@/components/Login";
-import React from "react";
+import { LoginForm } from "./Components/LoginForm";
 
-export const Login: React.FC = () => {
+export const Login = () => {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 h-full">
-      <aside className="bg-primary flex justify-center items-center h-full">
+      <aside className="justify-center items-center h-full hidden lg:flex">
         <img
           src="/logo.svg"
           width={500}
