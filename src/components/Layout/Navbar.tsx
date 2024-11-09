@@ -1,6 +1,7 @@
 import { motion, useAnimation } from "framer-motion";
 import { List, MagnifyingGlass } from "phosphor-react";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 type NavbarItemProps = {
   text: string;
@@ -19,12 +20,11 @@ const NavbarItem: React.FC<NavbarItemProps> = ({ text, href }) => {
       className="cursor-pointer p-2 transition duration-300 ease-in-out transform hover:scale-[1.02]"
       animate={controls}
     >
-      <a
-        href={href}
-        className="text-white text-sm font-bold hover:text-gray-500 uppercase p-2"
-      >
-        {text}
-      </a>
+      <Link to={href}>
+        <span className="text-white text-sm font-bold hover:text-gray-500 uppercase p-2">
+          {text}
+        </span>
+      </Link>
     </motion.div>
   );
 };
@@ -36,9 +36,9 @@ export const Navbar = () => {
     <nav className="p-3 bg-gray-900">
       <div className="container mx-auto flex items-center justify-between">
         <div className="flex items-center space-x-4">
-          <a href="/">
+          <Link to="/">
             <img src="/logo-full.svg" alt="Logo" className="h-8" />
-          </a>
+          </Link>
           <div className="hidden lg:flex space-x-4">
             <NavbarItem text="Explorar" href="/" />
             <NavbarItem text="Adicionar" href="/add" />
@@ -57,17 +57,17 @@ export const Navbar = () => {
         </div>
 
         <div className="hidden lg:flex items-center space-x-4 ml-auto">
-          <a href="/login">
+          <Link to="/login">
             <button className="bg-primary text-background px-6 py-2 rounded-2xl hover:opacity-80 transition font-medium">
               Entrar
             </button>
-          </a>
+          </Link>
 
-          <a href="/register">
+          <Link to={"/register"}>
             <button className="bg-background border border-primary text-white px-4 py-2 rounded-2xl hover:opacity-70 transition">
               Criar Conta
             </button>
-          </a>
+          </Link>
         </div>
 
         <div className="lg:hidden flex items-center">
@@ -80,21 +80,23 @@ export const Navbar = () => {
       {isMobileMenuOpen && (
         <div className="lg:hidden flex flex-col mt-4 space-y-4 bg-gray-800 p-4 rounded-lg">
           <NavbarItem text="Explorar" href="/" />
-          <NavbarItem text="Adicionar" href="/" />
+          <NavbarItem text="Adicionar" href="/add" />
           <input
             type="text"
             placeholder="Pesquisar..."
             className="w-full h-10 px-4 text-black rounded-lg focus:outline-none"
           />
           <div className="flex flex-col space-y-2">
-            <a href="/login">
+            <Link to="/login">
               <button className="bg-primary text-background w-full py-2 rounded-lg hover:opacity-80 transition font-medium">
                 Entrar
               </button>
-            </a>
-            <button className="bg-background border border-primary text-white w-full py-2 rounded-lg hover:opacity-70 transition">
-              Criar Conta
-            </button>
+            </Link>
+            <Link to="/register">
+              <button className="bg-background border border-primary text-white w-full py-2 rounded-lg hover:opacity-70 transition">
+                Criar Conta
+              </button>
+            </Link>
           </div>
         </div>
       )}
