@@ -77,7 +77,7 @@ export const Navbar = () => {
         </div>
       </div>
 
-      {!isMobileMenuOpen && (
+      {isMobileMenuOpen && (
         <div className="lg:hidden flex flex-col mt-4 space-y-4 bg-gray-800 p-4 rounded-lg">
           <NavbarItem text="Explorar" href="/" />
           <NavbarItem text="Adicionar" href="/add" />
