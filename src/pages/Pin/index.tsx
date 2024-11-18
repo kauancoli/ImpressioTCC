@@ -4,14 +4,14 @@ import { ArrowLeft } from "phosphor-react";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import json from "../../../mock.json";
-import { PinList } from "../Pins/PinList";
-import { UpDownVote } from "../UpDownVote";
-import { UserTag } from "../UserTag";
-import { PinImage } from "./PinImage";
+import { PinImage } from "../../components/PinDetail/PinImage";
+import { PinList } from "../../components/Pins/PinList";
+import { UpDownVote } from "../../components/UpDownVote";
+import { UserTag } from "../../components/UserTag";
 
 type PinInfoProps = object;
 
-export const PinInfo: React.FC<PinInfoProps> = () => {
+export const Pin: React.FC<PinInfoProps> = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const topRef = useRef<HTMLDivElement>(null);

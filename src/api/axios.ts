@@ -1,11 +1,9 @@
 import axios, { AxiosRequestConfig } from "axios";
 
-const baseURL = "";
+const baseURL = import.meta.env.VITE_API;
 
 if (!baseURL) {
-  throw new Error(
-    "A variável de ambiente VITE_PUBLIC_API_URL_TOS não está definida"
-  );
+  throw new Error("A variável de ambiente VITE_API não está definida");
 }
 
 const axiosInstance = axios.create({

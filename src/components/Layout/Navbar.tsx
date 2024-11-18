@@ -1,15 +1,14 @@
 import { motion, useAnimation } from "framer-motion";
 import { List, MagnifyingGlass } from "phosphor-react";
 import { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 type NavbarItemProps = {
   text: string;
   href: string;
-  onClick?: () => void;
 };
 
-const NavbarItem: React.FC<NavbarItemProps> = ({ text, href, onClick }) => {
+const NavbarItem: React.FC<NavbarItemProps> = ({ text, href }) => {
   const controls = useAnimation();
 
   useEffect(() => {
@@ -21,7 +20,7 @@ const NavbarItem: React.FC<NavbarItemProps> = ({ text, href, onClick }) => {
       className="cursor-pointer p-2 transition duration-300 ease-in-out transform hover:scale-[1.02]"
       animate={controls}
     >
-      <Link to={href} onClick={onClick}>
+      <Link to={href}>
         <span className="text-white text-sm font-bold hover:text-gray-500 uppercase p-2">
           {text}
         </span>
@@ -32,11 +31,6 @@ const NavbarItem: React.FC<NavbarItemProps> = ({ text, href, onClick }) => {
 
 export const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const location = useLocation();
-
-  useEffect(() => {
-    setIsMobileMenuOpen(false);
-  }, [location]);
 
   return (
     <nav className="p-3 bg-gray-900">
@@ -85,16 +79,8 @@ export const Navbar = () => {
 
       {isMobileMenuOpen && (
         <div className="lg:hidden flex flex-col mt-4 space-y-4 bg-gray-800 p-4 rounded-lg">
-          <NavbarItem
-            text="Explorar"
-            href="/"
-            onClick={() => setIsMobileMenuOpen(false)}
-          />
-          <NavbarItem
-            text="Adicionar"
-            href="/add"
-            onClick={() => setIsMobileMenuOpen(false)}
-          />
+          <NavbarItem text="Explorar" href="/" />
+          <NavbarItem text="Adicionar" href="/add" />
           <input
             type="text"
             placeholder="Pesquisar..."
@@ -102,18 +88,12 @@ export const Navbar = () => {
           />
           <div className="flex flex-col space-y-2">
             <Link to="/login">
-              <button
-                className="bg-primary text-background w-full py-2 rounded-lg hover:opacity-80 transition font-medium"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
+              <button className="bg-primary text-background w-full py-2 rounded-lg hover:opacity-80 transition font-medium">
                 Entrar
               </button>
             </Link>
             <Link to="/register">
-              <button
-                className="bg-background border border-primary text-white w-full py-2 rounded-lg hover:opacity-70 transition"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
+              <button className="bg-background border border-primary text-white w-full py-2 rounded-lg hover:opacity-70 transition">
                 Criar Conta
               </button>
             </Link>

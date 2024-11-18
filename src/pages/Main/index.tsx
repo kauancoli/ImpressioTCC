@@ -1,14 +1,31 @@
+import { api } from "@/api/axios";
 import { PinList } from "@/components/Pins/PinList";
-import { PinDetailDTO } from "@/DTOS/PinDTO";
-import React from "react";
-import json from "../../../mock.json";
+import { GetPinsResponseDTO, PinDetailDTO } from "@/DTOS/PinDTO";
+import { useEffect, useState } from "react";
 
 export const Main: React.FC = () => {
-  const photos: PinDetailDTO[] = json;
+  const [arts, setArts] = useState<PinDetailDTO[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  async function getArts() {
+    setLoading(true);
+    try {
+      const response = await api.get<GetPinsResponseDTO>("ObraArte");
+      setArts(response.data.registros);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    getArts();
+  }, []);
 
   return (
     <div className="p-3">
-      <PinList listOfPins={photos} />
+      <PinList listOfPins={arts} loading={loading} />
     </div>
   );
 };
