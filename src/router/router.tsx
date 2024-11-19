@@ -1,7 +1,7 @@
 import { Layout } from "@/components/Layout/Layout";
 import { Loading } from "@/components/Loading";
 import { AuthProvider, useAuth } from "@/context/AuthContext";
-import { Add } from "@/pages/Add";
+import { AddImagePage } from "@/pages/Add";
 import { Login } from "@/pages/Login/Login";
 import { Register } from "@/pages/Login/Register";
 import { Main } from "@/pages/Main";
@@ -30,7 +30,7 @@ const router = createBrowserRouter([
           { path: "/", element: <Main /> },
           { path: "/pin/:id", element: <Pin /> },
           { path: "/user/:id", element: <User /> },
-          { path: "/add", element: <Add /> },
+          { path: "/add", element: <AddImagePage /> },
           { path: "/login", element: <Login /> },
           { path: "/register", element: <Register /> },
         ],
