@@ -19,8 +19,6 @@ export const AddImagePage: React.FC = () => {
       publico,
     };
 
-    console.log("Dados enviados:", data);
-
     // Enviar para a API
     // Exemplo:
     // api.post("/endpoint", data);

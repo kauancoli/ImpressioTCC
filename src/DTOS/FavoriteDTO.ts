@@ -1,27 +1,22 @@
-export type PinImageDTO = {
-  image: string;
-  title: string;
-};
-
-export type GetPinsResponseDTO = {
+export type GetFavoriteResponseDTO = {
   data: {
     totalDeItens: number;
     itensPorPagina: number;
     paginaAtual: number;
     totalDePaginas: number;
     temPaginaAnterior: boolean;
-    registros: PinDetailDTO[];
+    registros: FavoriteDTO[];
   };
   messages: [];
   success: boolean;
   token: string | null;
 };
 
-export type PinDetailDTO = {
+export type FavoriteDTO = {
+  idObraFavoritada: number;
   idObraArte: number;
   imagemObraArte: string;
   descricaoObraArte: string;
-  publico: boolean;
   idUsuario: number;
   nomeUsuario: string;
   apelido: string;

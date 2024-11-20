@@ -1,17 +1,17 @@
 import { PinDetailDTO } from "@/DTOS/PinDTO";
 import { User } from "phosphor-react";
+import { Link } from "react-router-dom";
 
 type UserTagProps = {
   user: Pick<
     PinDetailDTO,
     "idUsuario" | "nomeUsuario" | "apelido" | "imagemUsuario"
   >;
-  onClick: () => void;
 };
 
-export const UserTag = ({ user, onClick }: UserTagProps) => {
+export const UserTag = ({ user }: UserTagProps) => {
   return (
-    <>
+    <Link to={`/user/${user.apelido}`}>
       {user ? (
         <div className="flex gap-2 items-center md:p-0 md:gap-3">
           {user.imagemUsuario ? (
@@ -20,7 +20,7 @@ export const UserTag = ({ user, onClick }: UserTagProps) => {
               alt="userImage"
               width={45}
               height={45}
-              className="rounded-full w-8 h-8 md:w-12 md:h-12"
+              className="rounded-full w-8 h-8 md:w-12 md:h-12 cursor-pointer"
             />
           ) : (
             <div className="rounded-full w-8 h-8 md:w-12 md:h-12 bg-gray-400 flex justify-center items-center">
@@ -38,6 +38,6 @@ export const UserTag = ({ user, onClick }: UserTagProps) => {
           </div>
         </div>
       ) : null}
-    </>
+    </Link>
   );
 };

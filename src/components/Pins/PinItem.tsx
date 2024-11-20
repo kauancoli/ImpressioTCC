@@ -4,20 +4,9 @@ import { UserTag } from "../UserTag";
 
 type PinItemProps = {
   pin: PinDetailDTO;
-  onClick: () => void;
 };
 
-export const PinItem = ({ pin, onClick }: PinItemProps) => {
-  const user: Pick<
-    PinDetailDTO,
-    "idUsuario" | "nomeUsuario" | "apelido" | "imagemUsuario"
-  > = {
-    idUsuario: pin.idUsuario,
-    nomeUsuario: pin.nomeUsuario,
-    apelido: pin.apelido,
-    imagemUsuario: pin.imagemUsuario,
-  };
-
+export const PinItem = ({ pin }: PinItemProps) => {
   return (
     <div className="mb-5">
       <Link to={`/pin/${pin.idObraArte}`}>
@@ -43,13 +32,9 @@ export const PinItem = ({ pin, onClick }: PinItemProps) => {
         </div>
       </Link>
 
-      <h2
-        className="font-bold 
-        text-sm mb-1 mt-2 text-white lg:text-base"
-      >
-        {pin.descricaoObraArte}
-      </h2>
-      <UserTag user={user} onClick={onClick} />
+      <div className="mt-2">
+        <UserTag user={pin} />
+      </div>
     </div>
   );
 };

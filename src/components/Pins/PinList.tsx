@@ -39,11 +39,7 @@ export const PinList = ({ listOfPins, loading }: PinListProps) => {
       columnClassName="my-masonry-grid_column"
     >
       {listOfPins.map((item) => (
-        <PinItem
-          key={`List - ${item.idObraArte}`}
-          pin={item}
-          onClick={() => {}}
-        />
+        <PinItem key={`List - ${item.idObraArte}`} pin={item} />
       ))}
     </Masonry>
   );

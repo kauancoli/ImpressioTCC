@@ -1,4 +1,4 @@
-import { UserDTO } from "@/DTOS/PinDTO";
+import { UserDTO } from "@/DTOS/UserDTO";
 import axios from "axios";
 import { createContext, useContext, useEffect, useState } from "react";
 

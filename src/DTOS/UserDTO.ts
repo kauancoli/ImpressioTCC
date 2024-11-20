@@ -10,7 +10,14 @@ export type UserDTO = {
 };
 
 export type GetUsersResponseDTO = {
-  data: UserDTO;
+  data: {
+    totalDeItens: number;
+    itensPorPagina: number;
+    paginaAtual: number;
+    totalDePaginas: number;
+    temPaginaAnterior: boolean;
+    registros: UserDTO[];
+  };
   messages: [];
   success: boolean;
   token: string | null;
