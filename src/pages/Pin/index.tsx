@@ -34,12 +34,12 @@ export const Pin: React.FC<PinInfoProps> = () => {
     }
   }
 
-  async function getFavoriteByUser() {
+  async function getFavoriteByUserId() {
     try {
       const response = await api.get<GetFavoriteResponseDTO>(
-        "ObraArteFavorita",
+        "ObraArteFavorita/GetById",
         {
-          params: { idUsuario: 2 },
+          params: { idUsuario: 2, idObraArte: parseInt(id as string) },
         }
       );
       setFavorite(response.data.registros.length > 0);
@@ -62,15 +62,16 @@ export const Pin: React.FC<PinInfoProps> = () => {
   }
 
   const filteredPhotos = arts.filter(
-    (photo) => photo.idObraArte.toString() === id
+    (photo) => photo.idObraArte.toString() === id && photo.publico === true
   );
   const remainingPhotos = arts.filter(
-    (photo) => photo.idObraArte.toString() !== id
+    (photo) => photo.idObraArte.toString() !== id && photo.publico === true
   );
   const randomPhotos = remainingPhotos.sort(() => Math.random() - 0.5);
 
   useEffect(() => {
     getArts();
+    getFavoriteByUserId();
   }, []);
 
   useEffect(() => {

@@ -7,9 +7,14 @@ import "./PinList.css";
 type PinListProps = {
   listOfPins: PinDetailDTO[];
   loading: boolean;
+  showUser?: boolean;
 };
 
-export const PinList = ({ listOfPins, loading }: PinListProps) => {
+export const PinList = ({
+  listOfPins,
+  loading,
+  showUser = true,
+}: PinListProps) => {
   const breakpointColumnsObj = {
     default: 6,
     1100: 4,
@@ -18,7 +23,7 @@ export const PinList = ({ listOfPins, loading }: PinListProps) => {
     400: 2,
   };
 
-  if (loading) {
+  if (loading || listOfPins.length === 0) {
     return (
       <Masonry
         breakpointCols={breakpointColumnsObj}
@@ -39,7 +44,11 @@ export const PinList = ({ listOfPins, loading }: PinListProps) => {
       columnClassName="my-masonry-grid_column"
     >
       {listOfPins.map((item) => (
-        <PinItem key={`List - ${item.idObraArte}`} pin={item} />
+        <PinItem
+          key={`List - ${item.idObraArte}`}
+          pin={item}
+          showUser={showUser}
+        />
       ))}
     </Masonry>
   );

@@ -11,7 +11,7 @@ export const Main: React.FC = () => {
     setLoading(true);
     try {
       const response = await api.get<GetPinsResponseDTO>("ObraArte");
-      setArts(response.data.registros);
+      setArts(response.data.registros.filter((art) => art.publico));
     } catch (error) {
       console.error(error);
     } finally {
