@@ -7,6 +7,8 @@ export const Main: React.FC = () => {
   const [arts, setArts] = useState<PinDetailDTO[]>([]);
   const [loading, setLoading] = useState(false);
 
+  const [search, setSearch] = useState("");
+
   async function getArts() {
     setLoading(true);
     try {
@@ -20,7 +22,14 @@ export const Main: React.FC = () => {
   }
 
   useEffect(() => {
-    getArts();
+    if (search === "") {
+      getArts();
+    } else {
+      const filteredArts = arts.filter((art) =>
+        art.descricaoObraArte.toLowerCase().includes(search.toLowerCase())
+      );
+      setArts(filteredArts);
+    }
   }, []);
 
   return (

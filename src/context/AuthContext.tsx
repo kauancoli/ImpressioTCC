@@ -1,20 +1,32 @@
-import { GetLoginResponseDTO } from "@/DTOS/LoginDTO";
-import { UserDTO } from "@/DTOS/UserDTO";
+import { api } from "@/api/axios";
+import {
+  GetLoginResponseDTO,
+  GetUserByIdResponseDTO,
+  UserDTO,
+} from "@/DTOS/UserDTO";
 import { getCookie, setCookie } from "@/utils/cookie";
 import axios from "axios";
+import { jwtDecode } from "jwt-decode";
 import { createContext, useContext, useEffect, useState } from "react";
 
 const URL = import.meta.env.VITE_API;
 
+interface UserJwtDTO {
+  unique_name: string;
+  nbf: number;
+  exp: number;
+  iat: number;
+}
+
 interface AuthContextData {
   token: string | null;
-  login: (username: string, password: string) => void;
+  login: (username: string, password: string) => Promise<void>;
   register: (
     username: string,
     email: string,
     birthdate: string,
     password: string
-  ) => void;
+  ) => Promise<void>;
   signOut: () => void;
   user: UserDTO | null;
   loading: boolean;
@@ -32,29 +44,50 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    const token = getCookie("token");
+    async function validateToken() {
+      const storedToken = getCookie("imp-token");
+      const storedUser = getCookie("imp-user");
+      if (storedToken) {
+        try {
+          const decodedToken = jwtDecode<UserJwtDTO>(storedToken);
 
-    if (token) {
-      setToken(token);
+          const currentTime = Math.floor(Date.now() / 1000);
+          if (decodedToken.exp && decodedToken.exp < currentTime) {
+            throw new Error("Token expired");
+          }
+
+          setToken(storedToken);
+
+          setUser(storedUser ? JSON.parse(storedUser) : null);
+        } catch (error) {
+          console.error("Invalid token", error);
+          signOut();
+        }
+      }
+      setLoading(false);
     }
-    setLoading(false);
+
+    validateToken();
   }, []);
 
   async function login(email: string, password: string) {
     setLoading(true);
     try {
       const response = await signInApi(email, password);
-      if (response) {
+      if (response?.success) {
         setToken(response.token);
-        setCookie("token", response.token);
+        setCookie("imp-token", response.token);
 
-        await new Promise((resolve) => setTimeout(resolve, 50));
+        const user = await getUser(response.dados.idUsuario);
+        if (user) {
+          setUser(user);
+          setCookie("imp-user", JSON.stringify(user));
+        }
       } else {
         throw new Error("Invalid credentials");
       }
     } catch (error) {
-      setLoading(false);
-      console.error(error);
+      console.error("Login failed", error);
       throw error;
     } finally {
       setLoading(false);
@@ -69,11 +102,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   ) {
     setLoading(true);
     try {
-      const response = await signUpApi(username, email, birthdate, password);
-      console.log(response);
-      setLoading(false);
+      await signUpApi(username, email, birthdate, password);
     } catch (error) {
-      console.error(error);
+      console.error("Registration failed", error);
+    } finally {
       setLoading(false);
     }
   }
@@ -81,6 +113,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   function signOut() {
     setToken(null);
     setUser(null);
+    setCookie("imp-token", "", -1);
+    setCookie("imp-user", "", -1);
+
+    window.location.reload();
   }
 
   return (
@@ -101,16 +137,15 @@ export function useAuth() {
 }
 
 async function signInApi(
-  emailUsuario: string,
-  senha: string
+  email: string,
+  password: string
 ): Promise<GetLoginResponseDTO | null> {
   try {
     const response = await axios.post(`${URL}/Login`, {
-      emailUsuario,
-      senha,
+      emailUsuario: email,
+      senha: password,
     });
 
-    console.log("RD", response.data);
     return response.data;
   } catch (error) {
     console.error("Error during login", error);
@@ -125,7 +160,7 @@ async function signUpApi(
   password: string
 ): Promise<string | null> {
   try {
-    const response = await axios.post("", {
+    const response = await axios.post(`${URL}/Register`, {
       username,
       email,
       birthdate,
@@ -134,7 +169,21 @@ async function signUpApi(
 
     return response.data;
   } catch (error) {
-    console.error(error);
+    console.error("Error during registration", error);
+    return null;
+  }
+}
+
+async function getUser(userId: number): Promise<UserDTO | null> {
+  try {
+    const response = await api.get<GetUserByIdResponseDTO>(`/Usuario/GetById`, {
+      params: {
+        idUsuario: userId,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error getting user", error);
     return null;
   }
 }

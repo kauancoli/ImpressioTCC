@@ -30,14 +30,10 @@ export function LoginForm() {
 
   const onSubmit = async (loginData: LoginFormData) => {
     try {
-      const response = await login(loginData.email, loginData.password);
-      console.log("RR", response);
-      if (response.status === 200) {
-        setError(null);
-        navigate("/");
-      } else {
-        setError("Falha no login. Tente novamente.");
-      }
+      await login(loginData.email, loginData.password);
+
+      setError(null);
+      navigate("/");
     } catch (error: any) {
       setError(error.response?.data?.message || "Erro ao fazer login");
       console.error(error);

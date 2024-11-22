@@ -7,9 +7,15 @@ import { Login } from "@/pages/Login/Login";
 import { Register } from "@/pages/Login/Register";
 import { Main } from "@/pages/Main";
 import { Pin } from "@/pages/Pin";
+import { Profile } from "@/pages/Profile";
 import { User } from "@/pages/User";
 import { Suspense } from "react";
-import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  Navigate,
+  Outlet,
+  RouterProvider,
+} from "react-router-dom";
 
 export default function App() {
   return (
@@ -31,10 +37,17 @@ const router = createBrowserRouter([
           { path: "/", element: <Main /> },
           { path: "/pin/:id", element: <Pin /> },
           { path: "/user/:nickname", element: <User /> },
-          { path: "/add", element: <AddImagePage /> },
           { path: "/login", element: <Login /> },
           { path: "/register", element: <Register /> },
           { path: "*", element: <Error404 /> },
+        ],
+      },
+      {
+        id: "private",
+        element: <PrivateRoute />,
+        children: [
+          { path: "/profile", element: <Profile /> },
+          { path: "/add", element: <AddImagePage /> },
         ],
       },
     ],
@@ -44,16 +57,24 @@ const router = createBrowserRouter([
 function GlobalLayout() {
   return (
     <Suspense fallback={<Loading />}>
-      <Outlet />
+      <Layout>
+        <Outlet />
+      </Layout>
     </Suspense>
   );
 }
 
+export function PrivateRoute() {
+  const { user } = useAuth();
+
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return <Outlet />;
+}
+
 function PublicLayout() {
   const { loading } = useAuth();
-  return (
-    <div>
-      <Layout>{loading ? <Loading /> : <Outlet />}</Layout>
-    </div>
-  );
+  return <div>{loading ? <Loading /> : <Outlet />}</div>;
 }
