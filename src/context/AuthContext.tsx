@@ -1,6 +1,10 @@
+import { GetLoginResponseDTO } from "@/DTOS/LoginDTO";
 import { UserDTO } from "@/DTOS/UserDTO";
+import { getCookie, setCookie } from "@/utils/cookie";
 import axios from "axios";
 import { createContext, useContext, useEffect, useState } from "react";
+
+const URL = import.meta.env.VITE_API;
 
 interface AuthContextData {
   token: string | null;
@@ -28,25 +32,31 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    const user = localStorage.getItem("user");
+    const token = getCookie("token");
 
-    if (token && user) {
+    if (token) {
       setToken(token);
-      setUser(JSON.parse(user));
     }
-
     setLoading(false);
   }, []);
 
-  async function login(username: string, password: string) {
+  async function login(email: string, password: string) {
     setLoading(true);
     try {
-      const response = await signInApi(username, password);
-      console.log(response);
-      setLoading(false);
+      const response = await signInApi(email, password);
+      if (response) {
+        setToken(response.token);
+        setCookie("token", response.token);
+
+        await new Promise((resolve) => setTimeout(resolve, 50));
+      } else {
+        throw new Error("Invalid credentials");
+      }
     } catch (error) {
+      setLoading(false);
       console.error(error);
+      throw error;
+    } finally {
       setLoading(false);
     }
   }
@@ -91,18 +101,19 @@ export function useAuth() {
 }
 
 async function signInApi(
-  username: string,
-  password: string
-): Promise<string | null> {
+  emailUsuario: string,
+  senha: string
+): Promise<GetLoginResponseDTO | null> {
   try {
-    const response = await axios.post("", {
-      username,
-      password,
+    const response = await axios.post(`${URL}/Login`, {
+      emailUsuario,
+      senha,
     });
 
+    console.log("RD", response.data);
     return response.data;
   } catch (error) {
-    console.error(error);
+    console.error("Error during login", error);
     return null;
   }
 }

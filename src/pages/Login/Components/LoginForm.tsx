@@ -1,22 +1,46 @@
 import { useAuth } from "@/context/AuthContext";
 import { Eye, EyeSlash } from "phosphor-react";
 import { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
+
+interface LoginFormData {
+  email: string;
+  password: string;
+}
 
 export function LoginForm() {
   const { login } = useAuth();
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
+
   const [isVisibility, setIsVisibility] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  const onSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm<LoginFormData>({
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
+  const onSubmit = async (loginData: LoginFormData) => {
     try {
-      login(email, password);
-      navigate("/");
+      const response = await login(loginData.email, loginData.password);
+      console.log("RR", response);
+      if (response.status === 200) {
+        setError(null);
+        navigate("/");
+      } else {
+        setError("Falha no login. Tente novamente.");
+      }
     } catch (error: any) {
-      console.error(error.response.data.message);
+      setError(error.response?.data?.message || "Erro ao fazer login");
+      console.error(error);
     }
   };
 
@@ -33,49 +57,66 @@ export function LoginForm() {
         </span>
       </h2>
 
-      <form onSubmit={onSubmit} className="space-y-6">
-        <div>
-          <label
-            htmlFor="email"
-            className="block text-sm font-medium text-white"
-          >
-            Email
-          </label>
-          <input
-            type="email"
-            id="email"
-            placeholder="Digite seu email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="mt-1 block w-full px-4 py-2 bg-gray-50 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-          />
-        </div>
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        <Controller
+          name="email"
+          control={control}
+          render={({ field }) => (
+            <div>
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-white"
+              >
+                Email
+              </label>
+              <input
+                {...field}
+                type="email"
+                placeholder="Digite seu email"
+                {...register("email", {
+                  required: "Campo obrigatório",
+                })}
+                className="mt-1 block w-full px-4 py-2 bg-gray-50 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              />
+            </div>
+          )}
+        />
 
-        <div>
-          <label
-            htmlFor="password"
-            className="block text-sm font-medium text-white"
-          >
-            Senha
-          </label>
-          <div className="relative mt-1">
-            <input
-              type={isVisibility ? "text" : "password"}
-              id="password"
-              placeholder="Digite sua senha"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="block w-full px-4 py-2 bg-gray-50 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-            />
-            <button
-              type="button"
-              onClick={handlePasswordVisibility}
-              className="absolute inset-y-0 right-0 flex items-center px-4 text-gray-500 focus:outline-none"
-            >
-              {!isVisibility ? <EyeSlash size={24} /> : <Eye size={24} />}
-            </button>
-          </div>
-        </div>
+        <Controller
+          name="password"
+          control={control}
+          render={({ field }) => (
+            <div>
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-white"
+              >
+                Senha
+              </label>
+              <div className="relative mt-1">
+                <input
+                  {...field}
+                  type={isVisibility ? "text" : "password"}
+                  id="password"
+                  placeholder="Digite sua senha"
+                  {...register("password", {
+                    required: "Campo obrigatório",
+                  })}
+                  className="block w-full px-4 py-2 bg-gray-50 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                />
+                <button
+                  type="button"
+                  onClick={handlePasswordVisibility}
+                  className="absolute inset-y-0 right-0 flex items-center px-4 text-gray-500 focus:outline-none"
+                >
+                  {!isVisibility ? <EyeSlash size={24} /> : <Eye size={24} />}
+                </button>
+              </div>
+            </div>
+          )}
+        />
+
+        {error && <p className="text-red-500 text-sm">{error}</p>}
 
         <div>
           <button
