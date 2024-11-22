@@ -37,7 +37,7 @@ export const PinItem = ({ pin, showUser = true }: PinItemProps) => {
 
       {showUser && (
         <div className="mt-2">
-          <UserTag user={pin} />
+          <UserTag userTag={pin} />
         </div>
       )}
     </div>

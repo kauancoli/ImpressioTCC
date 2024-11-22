@@ -1,6 +1,7 @@
 import { Layout } from "@/components/Layout/Layout";
 import { Loading } from "@/components/Loading";
 import { AuthProvider, useAuth } from "@/context/AuthContext";
+import { SearchProvider } from "@/context/SearchContextType";
 import { AddImagePage } from "@/pages/Add";
 import { Error404 } from "@/pages/Error404";
 import { Login } from "@/pages/Login/Login";
@@ -57,15 +58,21 @@ const router = createBrowserRouter([
 function GlobalLayout() {
   return (
     <Suspense fallback={<Loading />}>
-      <Layout>
-        <Outlet />
-      </Layout>
+      <SearchProvider>
+        <Layout>
+          <Outlet />
+        </Layout>
+      </SearchProvider>
     </Suspense>
   );
 }
 
 export function PrivateRoute() {
-  const { user } = useAuth();
+  const { requestStatus, user } = useAuth();
+
+  if (requestStatus === "pending") {
+    return <Loading />;
+  }
 
   if (!user) {
     return <Navigate to="/login" replace />;

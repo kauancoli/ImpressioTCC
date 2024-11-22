@@ -3,6 +3,7 @@ import { Eye, EyeSlash } from "phosphor-react";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
+import { Link } from "react-router-dom";
 
 interface LoginFormData {
   email: string;
@@ -126,9 +127,9 @@ export function LoginForm() {
 
       <div className="text-center text-white pt-4 text-xs">
         <span>Não tem uma conta? </span>
-        <a href="/register" className="text-primary">
+        <Link to="/register" className="text-primary">
           Criar conta
-        </a>
+        </Link>
       </div>
     </div>
   );

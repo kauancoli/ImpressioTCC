@@ -1,10 +1,10 @@
 export type UserDTO = {
   idUsuario: number;
   emailUsuario: string;
-  dataNascimento: string;
+  dataNascimento: Date;
   apelido: string;
   nomeUsuario: string;
-  biografiaUsuario: null;
+  biografiaUsuario: string;
   imagemUsuario: string | null;
   publico: boolean;
 };
@@ -18,7 +18,7 @@ export type GetUsersResponseDTO = {
     temPaginaAnterior: boolean;
     registros: UserDTO[];
   };
-  messages: [];
+  messages: string[];
   success: boolean;
   token: string | null;
 };

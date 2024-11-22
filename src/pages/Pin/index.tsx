@@ -1,7 +1,9 @@
 import { api } from "@/api/axios";
 import { UpDownVote } from "@/components/UpDownVote";
-import { GetFavoriteResponseDTO } from "@/DTOS/FavoriteDTO";
+import { useAuth } from "@/context/AuthContext";
+import { FavoriteDTO, GetFavoriteResponseDTO } from "@/DTOS/FavoriteDTO";
 import { GetPinsResponseDTO, PinDetailDTO } from "@/DTOS/PinDTO";
+import axios from "axios";
 import { motion } from "framer-motion";
 import { ArrowLeft } from "phosphor-react";
 import { useEffect, useRef, useState } from "react";
@@ -12,51 +14,109 @@ import { UserTag } from "../../components/UserTag";
 
 type PinInfoProps = object;
 
+const URL = import.meta.env.VITE_API;
+
+type LoadingProps = {
+  user: boolean;
+  arts: boolean;
+  favorites: boolean;
+};
+
 export const Pin: React.FC<PinInfoProps> = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const topRef = useRef<HTMLDivElement>(null);
+  const { user } = useAuth();
 
   const [arts, setArts] = useState<PinDetailDTO[]>([]);
-  const [favorite, setFavorite] = useState<boolean>(false);
-  const [loading, setLoading] = useState(false);
+  const [favorite, setFavorite] = useState<FavoriteDTO | null>(null);
+  const [isFavorite, setIsFavorite] = useState<boolean>(false);
+  const [loading, setLoading] = useState<LoadingProps>({
+    user: false,
+    arts: false,
+    favorites: false,
+  });
   const [currentId, setCurrentId] = useState(id);
 
   async function getArts() {
-    setLoading(true);
+    setLoading({
+      arts: true,
+      user: false,
+      favorites: true,
+    });
     try {
       const response = await api.get<GetPinsResponseDTO>("ObraArte");
       setArts(response.data.registros);
     } catch (error) {
       console.error(error);
     } finally {
-      setLoading(false);
+      setLoading({
+        arts: false,
+        user: false,
+        favorites: false,
+      });
     }
   }
 
   async function getFavoriteByUserId() {
     try {
       const response = await api.get<GetFavoriteResponseDTO>(
-        "ObraArteFavorita/GetById",
+        "ObraArteFavorita/GetByUsuarioEObra",
         {
-          params: { idUsuario: 2, idObraArte: parseInt(id as string) },
+          params: {
+            idUsuario: user?.idUsuario ?? 0,
+            idObraArte: id,
+          },
         }
       );
-      setFavorite(response.data.registros.length > 0);
+      setFavorite(response.data.registros[0] || null);
+
+      if (response.data.registros[0]) {
+        setIsFavorite(true);
+      } else {
+        setIsFavorite(false);
+      }
     } catch (error) {
       console.error(error);
     }
   }
 
   async function handleFavorite() {
+    setLoading({
+      arts: false,
+      user: false,
+      favorites: true,
+    });
     try {
-      await api.post(`ObraArteFavorita`, {
-        idUsuario: 2,
-        idObraArte: parseInt(id as string),
-        idObraArteFavoritada: 0,
+      if (!user?.idUsuario) {
+        console.error("Usuário não está logado.");
+        return;
+      }
+
+      if (!isFavorite) {
+        await api.post(`ObraArteFavorita`, {
+          idUsuario: user.idUsuario,
+          idObraArte: parseInt(id as string),
+          idObraArteFavoritada: 0,
+        });
+        setIsFavorite(true);
+      } else {
+        await axios.delete(`${URL}/ObraArteFavorita`, {
+          data: { idObraFavorita: favorite?.idObraFavoritada },
+        });
+        setIsFavorite(false);
+      }
+      setLoading({
+        arts: false,
+        user: false,
+        favorites: false,
       });
-      setFavorite(!favorite);
     } catch (error) {
+      setLoading({
+        arts: false,
+        user: false,
+        favorites: false,
+      });
       console.error(error);
     }
   }
@@ -72,7 +132,13 @@ export const Pin: React.FC<PinInfoProps> = () => {
   useEffect(() => {
     getArts();
     getFavoriteByUserId();
-  }, []);
+  }, [id]);
+
+  useEffect(() => {
+    if (isFavorite) {
+      getFavoriteByUserId();
+    }
+  }, [isFavorite, id]);
 
   useEffect(() => {
     topRef.current?.scrollIntoView({ behavior: "instant" });
@@ -99,7 +165,7 @@ export const Pin: React.FC<PinInfoProps> = () => {
       variants={pageAnimation}
       key={currentId}
     >
-      {loading ? (
+      {loading.arts ? (
         <div className="flex flex-col gap-4 items-center">
           <div className="w-2/3 h-96 bg-gray-800 animate-pulse rounded-3xl"></div>
         </div>
@@ -116,7 +182,7 @@ export const Pin: React.FC<PinInfoProps> = () => {
         </>
       ) : (
         filteredPhotos.map((p) => (
-          <>
+          <div key={`${p.idObraArte} - ${p.descricaoObraArte}`}>
             <div className="absolute">
               <ArrowLeft
                 size={32}
@@ -127,7 +193,6 @@ export const Pin: React.FC<PinInfoProps> = () => {
             </div>
             <motion.div
               className="flex flex-col lg:flex-row justify-center items-center gap-8"
-              key={`${p.idObraArte} - ${p.descricaoObraArte}`}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.6, ease: "easeOut" }}
@@ -139,17 +204,19 @@ export const Pin: React.FC<PinInfoProps> = () => {
                     {p.descricaoObraArte}
                   </h2>
                 </div>
-                <UserTag user={p} />
+                <UserTag userTag={p} />
                 <div className="flex items-center gap-4">
                   <UpDownVote
-                    vote={{ idUsuario: 2, idObraArte: 1 }}
+                    vote={{ idUsuario: user?.idUsuario!, idObraArte: 1 }}
                     onVote={async () => {}}
                     onFavorite={handleFavorite}
+                    isFavorite={isFavorite}
+                    favoriteLoading={loading.favorites}
                   />
                 </div>
               </div>
             </motion.div>
-          </>
+          </div>
         ))
       )}
 
@@ -157,7 +224,7 @@ export const Pin: React.FC<PinInfoProps> = () => {
         <h2 className="text-base sm:text-lg text-white text-center mb-4 lg:mb-8 select-none font-semibold">
           Mais para Explorar
         </h2>
-        <PinList listOfPins={randomPhotos} loading={loading} />
+        <PinList listOfPins={randomPhotos} loading={loading.arts} />
       </div>
     </motion.div>
   );

@@ -3,7 +3,7 @@ import { LoginForm } from "./Components/LoginForm";
 export const Login = () => {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 h-full">
-      <aside className="justify-center items-center h-full hidden lg:flex">
+      <aside className="justify-center items-center h-full hidden lg:flex select-none">
         <img
           src="/logo.svg"
           width={500}

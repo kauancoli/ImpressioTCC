@@ -1,5 +1,6 @@
 import { api } from "@/api/axios";
 import { PinList } from "@/components/Pins/PinList";
+import { useAuth } from "@/context/AuthContext";
 import { FavoriteDTO, GetFavoriteResponseDTO } from "@/DTOS/FavoriteDTO";
 import { GetPinsResponseDTO, PinDetailDTO } from "@/DTOS/PinDTO";
 import { GetUsersResponseDTO, UserDTO } from "@/DTOS/UserDTO";
@@ -17,12 +18,13 @@ type LoadingProps = {
 
 export const User: React.FC<UserProps> = () => {
   const { nickname } = useParams();
+  const { user } = useAuth();
 
   const [loading, setLoading] = useState<LoadingProps>({
     user: false,
     arts: false,
   });
-  const [user, setUser] = useState<UserDTO[]>([]);
+  const [userSelected, setUserSelected] = useState<UserDTO[]>([]);
   const [arts, setArts] = useState<PinDetailDTO[]>([]);
   const [favorites, setFavorites] = useState<FavoriteDTO[]>([]);
   const [activeTab, setActiveTab] = useState<"created" | "favorites">(
@@ -38,7 +40,7 @@ export const User: React.FC<UserProps> = () => {
       const response = await api.get<GetUsersResponseDTO>("Usuario", {
         params: { apelido: nickname },
       });
-      setUser(response.data.registros);
+      setUserSelected(response.data.registros);
     } catch (error) {
       console.error(error);
     } finally {
@@ -51,7 +53,7 @@ export const User: React.FC<UserProps> = () => {
   async function getArtsByUser() {
     try {
       const response = await api.get<GetPinsResponseDTO>("ObraArte", {
-        params: { idUsuario: user[0].idUsuario },
+        params: { idUsuario: userSelected[0].idUsuario },
       });
       setArts(response.data.registros.filter((art) => art.publico));
     } catch (error) {
@@ -64,7 +66,7 @@ export const User: React.FC<UserProps> = () => {
       const response = await api.get<GetFavoriteResponseDTO>(
         `ObraArteFavorita`,
         {
-          params: { idUsuario: 2 },
+          params: { idUsuario: user?.idUsuario },
         }
       );
       setFavorites(response.data.registros);
@@ -89,11 +91,11 @@ export const User: React.FC<UserProps> = () => {
   }, []);
 
   useEffect(() => {
-    if (user.length > 0) {
+    if (userSelected.length > 0) {
       getArtsByUser();
       getFavorites();
     }
-  }, [user]);
+  }, [userSelected]);
 
   return (
     <motion.div
@@ -106,7 +108,7 @@ export const User: React.FC<UserProps> = () => {
         <div className="flex flex-col gap-4 items-center">
           <div className="w-2/3 h-96 bg-gray-800 animate-pulse rounded-3xl"></div>
         </div>
-      ) : user.length === 0 ? (
+      ) : userSelected.length === 0 ? (
         <>
           <h1 className="text-2xl sm:text-3xl font-bold text-center mt-8">
             Usuário não encontrado 🙁
@@ -118,10 +120,10 @@ export const User: React.FC<UserProps> = () => {
           </Link>
         </>
       ) : (
-        user.map((u) => (
+        userSelected.map((u) => (
           <>
             <div
-              key={u?.idUsuario}
+              key={"Selected" + u?.idUsuario}
               className="flex flex-col items-center gap-3 p-6 rounded-xl shadow-md w-full sm:w-2/3 lg:w-1/2"
             >
               {u.imagemUsuario ? (
@@ -139,14 +141,6 @@ export const User: React.FC<UserProps> = () => {
               <h2 className="text-3xl font-semibold">{u?.nomeUsuario}</h2>
               <h3 className="text-sm text-gray-100">{u?.biografiaUsuario}</h3>
               <p className="text-md text-gray-400">{u?.apelido}</p>
-              <div className="flex mt-4 select-none">
-                <Link
-                  to={`/user/edit/${u?.idUsuario}`}
-                  className="bg-primary text-black px-5 py-2 rounded-full shadow-md hover:bg-primary-light transition font-bold"
-                >
-                  Editar Perfil
-                </Link>
-              </div>
             </div>
 
             <div className="w-full mt-8 sm:w-2/3 lg:w-4/5">
@@ -177,6 +171,7 @@ export const User: React.FC<UserProps> = () => {
                         listOfPins={arts}
                         loading={loading.arts}
                         showUser={false}
+                        key={"Created" + u?.idUsuario}
                       />
                     </div>
                   ) : (
@@ -190,7 +185,7 @@ export const User: React.FC<UserProps> = () => {
                   {favorites.length > 0 ? (
                     <div className="flex items-center mt-4 px-2 sm:px-8 lg:px-16 gap-4">
                       {favorites.map((f, index) => (
-                        <div key={index} className="group">
+                        <div key={"Fav" + f.idUsuario} className="group">
                           <Link to={`/pin/${f.idObraArte}`}>
                             <div className="relative overflow-hidden rounded-3xl shadow-lg cursor-pointer">
                               <img

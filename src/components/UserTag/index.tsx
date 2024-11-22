@@ -1,22 +1,27 @@
+import { useAuth } from "@/context/AuthContext";
 import { PinDetailDTO } from "@/DTOS/PinDTO";
 import { User } from "phosphor-react";
 import { Link } from "react-router-dom";
 
 type UserTagProps = {
-  user: Pick<
+  userTag: Pick<
     PinDetailDTO,
     "idUsuario" | "nomeUsuario" | "apelido" | "imagemUsuario"
   >;
 };
 
-export const UserTag = ({ user }: UserTagProps) => {
+export const UserTag = ({ userTag }: UserTagProps) => {
+  const { user } = useAuth();
+
+  const isUser = user?.idUsuario === userTag.idUsuario;
+
   return (
-    <Link to={`/user/${user.apelido}`}>
-      {user ? (
+    <Link to={isUser ? "/profile" : `/user/${userTag.apelido}`}>
+      {userTag ? (
         <div className="flex gap-2 items-center md:p-0 md:gap-3">
-          {user.imagemUsuario ? (
+          {userTag.imagemUsuario ? (
             <img
-              src={user.imagemUsuario}
+              src={userTag.imagemUsuario}
               alt="userImage"
               width={45}
               height={45}
@@ -30,10 +35,10 @@ export const UserTag = ({ user }: UserTagProps) => {
 
           <div className="flex flex-col">
             <h2 className="text-xs md:text-sm font-normal text-white max-w-[100px] truncate">
-              {user.nomeUsuario}
+              {userTag.nomeUsuario}
             </h2>
             <h2 className="text-xs text-gray-300 max-w-[100px] truncate">
-              {user.apelido}
+              {userTag.apelido}
             </h2>
           </div>
         </div>

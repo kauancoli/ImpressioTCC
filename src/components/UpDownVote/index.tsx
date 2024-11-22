@@ -6,9 +6,17 @@ type UpDownVoteProps = {
   vote: Omit<VoteDTO, "voto">;
   onVote: (voteData: VoteDTO) => Promise<void>;
   onFavorite: () => void;
+  isFavorite: boolean;
+  favoriteLoading: boolean;
 };
 
-export const UpDownVote = ({ vote, onVote, onFavorite }: UpDownVoteProps) => {
+export const UpDownVote = ({
+  vote,
+  onVote,
+  onFavorite,
+  isFavorite,
+  favoriteLoading = false,
+}: UpDownVoteProps) => {
   const [upVote, setUpVote] = useState<number>(0);
   const [downVote, setDownVote] = useState<number>(0);
   const [userVote, setUserVote] = useState<"up" | "down" | null>(null);
@@ -94,10 +102,10 @@ export const UpDownVote = ({ vote, onVote, onFavorite }: UpDownVoteProps) => {
 
       <Star
         size={32}
-        className="cursor-pointer"
+        className={`cursor-pointer ${favoriteLoading ? "animate-spin" : ""}`}
         color="#FED215"
         onClick={handleFavorite}
-        weight={favorite ? "fill" : "regular"}
+        weight={isFavorite ? "fill" : "regular"}
       />
     </div>
   );

@@ -1,13 +1,14 @@
 import { api } from "@/api/axios";
 import { PinList } from "@/components/Pins/PinList";
+import { useSearch } from "@/context/SearchContextType";
 import { GetPinsResponseDTO, PinDetailDTO } from "@/DTOS/PinDTO";
 import { useEffect, useState } from "react";
 
 export const Main: React.FC = () => {
+  const { search } = useSearch();
+
   const [arts, setArts] = useState<PinDetailDTO[]>([]);
   const [loading, setLoading] = useState(false);
-
-  const [search, setSearch] = useState("");
 
   async function getArts() {
     setLoading(true);
@@ -30,7 +31,7 @@ export const Main: React.FC = () => {
       );
       setArts(filteredArts);
     }
-  }, []);
+  }, [search]);
 
   return (
     <div className="p-3">

@@ -9,22 +9,6 @@ body {
   overflow: hidden;
 }
 
-.spinner {
-  animation-name: spin;
-  animation-duration: 700ms;
-  animation-iteration-count: infinite;
-  animation-timing-function: linear;
-  width: 7rem;
-}
-
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
 ::-webkit-scrollbar {
   width: 0.4rem;
   background-color: #171717;
