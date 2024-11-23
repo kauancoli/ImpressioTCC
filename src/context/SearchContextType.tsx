@@ -2,7 +2,7 @@ import React, { createContext, ReactNode, useContext, useState } from "react";
 import { useLocation } from "react-router";
 
 interface SearchContextType {
-  search: string;
+  search: string | null;
   setSearch: (search: string) => void;
   isMainPage: boolean;
 }
@@ -12,7 +12,7 @@ const SearchContext = createContext<SearchContextType | undefined>(undefined);
 export const SearchProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState<string | null>(null);
   const isMainPage = useLocation().pathname === "/";
 
   return (

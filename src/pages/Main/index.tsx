@@ -8,13 +8,15 @@ export const Main: React.FC = () => {
   const { search } = useSearch();
 
   const [arts, setArts] = useState<PinDetailDTO[]>([]);
+  const [artFiltered, setArtFiltered] = useState<PinDetailDTO[]>([]);
+
   const [loading, setLoading] = useState(false);
 
   async function getArts() {
     setLoading(true);
     try {
       const response = await api.get<GetPinsResponseDTO>("ObraArte");
-      setArts(response.data.registros.filter((art) => art.publico));
+      setArts(response.data.registros.filter((a) => a.publico));
     } catch (error) {
       console.error(error);
     } finally {
@@ -22,20 +24,27 @@ export const Main: React.FC = () => {
     }
   }
 
+  const randomArts = arts.sort(() => Math.random() - 0.5);
+
   useEffect(() => {
-    if (search === "") {
-      getArts();
-    } else {
+    getArts();
+  }, []);
+
+  useEffect(() => {
+    if (search) {
       const filteredArts = arts.filter((art) =>
         art.descricaoObraArte.toLowerCase().includes(search.toLowerCase())
       );
-      setArts(filteredArts);
+      setArtFiltered(filteredArts);
     }
   }, [search]);
 
   return (
     <div className="p-3">
-      <PinList listOfPins={arts} loading={loading} />
+      <PinList
+        listOfPins={search ? artFiltered : randomArts}
+        loading={loading}
+      />
     </div>
   );
 };

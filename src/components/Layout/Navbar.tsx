@@ -62,7 +62,7 @@ export const Navbar = () => {
             <input
               type="text"
               placeholder="Pesquisar..."
-              value={search}
+              value={search || ""}
               onChange={handleSearch}
               className="w-full h-10 px-10 text-black rounded-lg focus:outline-none"
             />
@@ -72,7 +72,7 @@ export const Navbar = () => {
           </div>
         )}
 
-        <div className="hidden lg:flex items-center space-x-4 ml-auto">
+        <div className="hidden lg:flex items-center space-x-4 ml-auto z-50">
           {user ? (
             <div className="flex items-center gap-2">
               <p className="text-white text-sm">{user.apelido}</p>
@@ -152,7 +152,7 @@ export const Navbar = () => {
           <input
             type="text"
             placeholder="Pesquisar..."
-            value={search}
+            value={search || ""}
             onChange={handleSearch}
             className="w-full h-10 px-4 text-black rounded-lg focus:outline-none"
           />

@@ -5,6 +5,7 @@ import { GetUsersResponseDTO } from "@/DTOS/UserDTO";
 import { CircleNotch } from "phosphor-react";
 import React, { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { useNavigate } from "react-router";
 
 type FormData = {
   imagemObraArte: string | null;
@@ -31,6 +32,7 @@ export const AddImagePage: React.FC = () => {
 
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   const onSubmit = async (data: FormData) => {
     setLoading(true);
@@ -45,8 +47,7 @@ export const AddImagePage: React.FC = () => {
       });
 
       if (response.success) {
-        reset();
-        setMessage(response.messages[0] || "Imagem adicionada com sucesso");
+        navigate("/");
       }
 
       console.log("Response", response);
