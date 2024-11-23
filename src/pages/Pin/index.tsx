@@ -46,7 +46,11 @@ export const Pin: React.FC<PinInfoProps> = () => {
     });
     try {
       const response = await api.get<GetPinsResponseDTO>("ObraArte");
-      setArts(response.data.registros);
+      setArts(
+        response.data.registros
+          .filter((a) => a.publico)
+          .sort(() => Math.random() - 0.5)
+      );
     } catch (error) {
       console.error(error);
     } finally {
