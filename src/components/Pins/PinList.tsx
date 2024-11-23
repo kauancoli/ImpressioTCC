@@ -8,12 +8,16 @@ type PinListProps = {
   listOfPins: PinDetailDTO[];
   loading: boolean;
   showUser?: boolean;
+  removePin?: (id: number) => void;
+  remove?: boolean;
 };
 
 export const PinList = ({
   listOfPins,
   loading,
   showUser = true,
+  removePin,
+  remove,
 }: PinListProps) => {
   const breakpointColumnsObj = {
     default: 6,
@@ -48,6 +52,8 @@ export const PinList = ({
           key={`List - ${item.idObraArte}`}
           pin={item}
           showUser={showUser}
+          removePin={removePin}
+          remove={remove}
         />
       ))}
     </Masonry>

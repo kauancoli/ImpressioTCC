@@ -50,7 +50,6 @@ export const AddImagePage: React.FC = () => {
         navigate("/");
       }
 
-      console.log("Response", response);
       setLoading(false);
     } catch (error) {
       setLoading(false);

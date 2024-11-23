@@ -3,6 +3,7 @@ import { PinList } from "@/components/Pins/PinList";
 import { useAuth } from "@/context/AuthContext";
 import { FavoriteDTO, GetFavoriteResponseDTO } from "@/DTOS/FavoriteDTO";
 import { GetPinsResponseDTO, PinDetailDTO } from "@/DTOS/PinDTO";
+import axios from "axios";
 import { motion } from "framer-motion";
 import { User as UserIcon } from "phosphor-react";
 import { useEffect, useState } from "react";
@@ -10,6 +11,8 @@ import { Link } from "react-router-dom";
 import { EditProfileForm } from "./Components/EditProfile";
 
 type ProfileProps = object;
+
+const URL = import.meta.env.VITE_API;
 
 export const Profile: React.FC<ProfileProps> = () => {
   const { user } = useAuth();
@@ -145,6 +148,17 @@ export const Profile: React.FC<ProfileProps> = () => {
                           listOfPins={arts}
                           loading={loading}
                           showUser={false}
+                          remove={true}
+                          removePin={async (id) => {
+                            try {
+                              await axios.delete(`${URL}/ObraArte`, {
+                                data: { idObraArte: id },
+                              });
+                              getArtsByUser();
+                            } catch (error) {
+                              console.error(error);
+                            }
+                          }}
                         />
                       </div>
                     ) : (
